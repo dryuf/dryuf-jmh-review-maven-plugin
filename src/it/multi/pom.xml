@@ -1,0 +1,86 @@
+<!-- execute with maven test only -->
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>net.dryuf.maven.plugin</groupId>
+	<artifactId>dryuf-executable-jar-maven-plugin-it-remove</artifactId>
+	<version>1.0.0</version>
+	<name>dryuf-jmh-review-maven-plugin.it</name>
+	<description>Maven plugin for updating benchmark sets - integration test</description>
+	<packaging>jar</packaging>
+
+	<properties>
+		<javac.version>1.8</javac.version>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+
+		<maven-compiler-plugin.version>3.3</maven-compiler-plugin.version>
+		<maven-jar-plugin.version>3.0.0</maven-jar-plugin.version>
+		<maven-shade-plugin.version>2.4.3</maven-shade-plugin.version>
+
+		<log4j.version>2.2</log4j.version>
+		<commons-io.version>2.6</commons-io.version>
+
+		<testng.version>7.7.0</testng.version>
+
+		<dryuf-jmh-review-maven-plugin.version>${project.version}</dryuf-jmh-review-maven-plugin.version>
+	</properties>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>${maven-compiler-plugin.version}</version>
+				<configuration>
+					<source>${javac.version}</source>
+					<target>${javac.version}</target>
+					<compilerArgs>
+						<arg>-Xlint:all</arg>
+					</compilerArgs>
+				</configuration>
+			</plugin>
+
+			<plugin>
+				<groupId>net.dryuf.maven.plugin</groupId>
+				<artifactId>dryuf-jmh-review-maven-plugin</artifactId>
+				<version>${dryuf-jmh-review-maven-plugin.version}</version>
+				<executions>
+					<execution>
+						<phase>test-compile</phase>
+						<goals>
+							<goal>update-benchmarks</goal>
+						</goals>
+						<configuration>
+							<datasets>
+								<dataset>jarfile</dataset>
+							</datasets>
+							<inputs>
+								<input>one.md</input>
+								<input>two.md</input>
+							</inputs>
+							<output>benchmarks.md</output>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+
+	</build>
+
+	<dependencies>
+
+		<dependency>
+			<groupId>org.testng</groupId>
+			<artifactId>testng</artifactId>
+			<version>${testng.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>commons-io</groupId>
+			<artifactId>commons-io</artifactId>
+			<version>${commons-io.version}</version>
+		</dependency>
+
+	</dependencies>
+
+</project>
