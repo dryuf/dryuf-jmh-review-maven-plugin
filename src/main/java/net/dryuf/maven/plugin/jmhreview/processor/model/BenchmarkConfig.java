@@ -30,4 +30,3 @@ public class BenchmarkConfig
 
 	private List<String> benchmarks;
 }
-

@@ -24,6 +24,8 @@ import net.dryuf.maven.plugin.jmhreview.processor.model.BenchmarkSet;
 
 import java.io.IOException;
 import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 
 /**
@@ -49,7 +51,14 @@ public class Processor
 
 		OutputProcessor outputProcessor = new OutputProcessor(configuration, benchmarks);
 		if (configuration.getOutputFile() != null) {
-			outputProcessor.replaceOutput(configuration.getOutputFile());
+			Set<String> processed = outputProcessor.replaceOutput(configuration.getOutputFile());
+			if (!processed.containsAll(configuration.getDatasets())) {
+				throw new IOException("Failed to process some of datasets: "+
+					configuration.getDatasets().stream()
+						.filter(s -> !processed.contains(s))
+						.collect(Collectors.toList())
+					);
+			}
 		}
 		else {
 			outputProcessor.replaceOutput(configuration.getOutputWriter());

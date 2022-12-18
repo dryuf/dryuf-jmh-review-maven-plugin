@@ -10,14 +10,19 @@ print the results table into standard output.
 
 ### Results
 
-|Benchmark                                                   |Mode|Units|    java 19| java 20 par|
-|:-----------------------------------------------------------|:---|:----|----------:|-----------:|
+|Benchmark                                      |Mode|Units|    java 19| java 20 par|
+|:----------------------------------------------|:---|:----|----------:|-----------:|
 |ConcurrentThreadBenchmark.benchmark2ClassLoader|avgt|ns/op|8892208.541| 9362036.799|
 |ConcurrentThreadBenchmark.benchmark3Class      |avgt|ns/op|8924515.866|10773556.495|
 |SingleThreadBenchmark.benchmark0File           |avgt|ns/op| 545174.357|  543784.247|
 |SingleThreadBenchmark.benchmark1Jar            |avgt|ns/op|4371955.586| 4281239.514|
 
-### Usage POM
+|Benchmark|Mode|Units|     Class1|     Class2|
+|:--------|:---|:----|----------:|----------:|
+|execute  |avgt|ns/op|1678276.855|2678276.855|
+|run      |avgt|ns/op|1609564.705|2609564.705|
+
+### Usage
 
 Typical usage is as follows:
 
@@ -50,8 +55,8 @@ Typical usage is as follows:
 ## Results
 <!--- benchmark:table:jarfile:: --->
 
-|Benchmark                                                   |Mode|Units|    java 19| java 20 par|
-|:-----------------------------------------------------------|:---|:----|----------:|-----------:|
+|Benchmark                                      |Mode|Units|    java 19| java 20 par|
+|:----------------------------------------------|:---|:----|----------:|-----------:|
 |ConcurrentThreadBenchmark.benchmark2ClassLoader|avgt|ns/op|8892208.541| 9362036.799|
 |ConcurrentThreadBenchmark.benchmark3Class      |avgt|ns/op|8924515.866|10773556.495|
 |SingleThreadBenchmark.benchmark0File           |avgt|ns/op| 545174.357|  543784.247|
@@ -78,6 +83,57 @@ ConcurrentThreadBenchmark.benchmark3Class          avgt    2  10773556.495      
 SingleThreadBenchmark.benchmark0File               avgt    2    543784.247          ns/op
 SingleThreadBenchmark.benchmark1Jar                avgt    2   4281239.514          ns/op
 -```
+```
+
+### Other options
+
+Options are provided as the last section in table statement and are provided in a form of HTTP query string.  Some
+options can be specified multiple times.
+
+```
+<!--- benchmark:table:test:key=class&multiply=1000&multiply=0.1: --->
+```
+
+#### Option key
+
+`key=class` config parameter organizes benchmarks by class name instead of measure set.
+
+```
+<!--- benchmark:table:key-class:key=class: --->
+
+|Benchmark|Mode|Units|     Class1|     Class2|
+|:--------|:---|:----|----------:|----------:|
+|execute  |avgt|ns/op|1678276.855|2678276.855|
+|run      |avgt|ns/op|1609564.705|2609564.705|
+
+### java 19
+
+<!--- benchmark:data:key-class:all:: --->
+-```
+Benchmark                                                       Mode  Cnt        Score   Error  Units
+Class1.execute                                                  avgt    2  1678276.855          ns/op
+Class1.run                                                      avgt    2  1609564.705          ns/op
+Class2.execute                                                  avgt    2  2678276.855          ns/op
+Class2.run                                                      avgt    2  2609564.705          ns/op
+-```
+```
+
+#### Option multiply
+
+`multiply=value` config parameter multiplies score by the value (float).  This is useful when benchmark run in batches.
+
+```
+<!--- makes the times divided by 1000: --->
+<!--- benchmark:table:key-class:multiply=0.001: --->
+```
+
+#### Option order
+
+`order=value` config parameter specifies order of benchmarks.  Not listed will be at the end, keeping original order.
+
+```
+<!--- makes the benchmarks appear in order of Class2, Class1 and any other not specified: --->
+<!--- benchmark:table:key-class:key=class&order=Class2&order=Class1: --->
 ```
 
 ## Usage app

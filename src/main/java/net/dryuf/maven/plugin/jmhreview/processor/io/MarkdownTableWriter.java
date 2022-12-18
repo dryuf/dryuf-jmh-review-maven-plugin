@@ -64,25 +64,14 @@ public class MarkdownTableWriter implements Closeable
 		for (Map.Entry<String, Integer> len: lengths.entrySet()) {
 			writer.write("|");
 			int align = header.get(len.getKey());
-			if (align < 0) {
-				writeLeftAligned(len.getKey(), len.getValue(), ' ');
-			}
-			else if (align > 0) {
-				writeRightAligned(len.getKey(), len.getValue(), ' ');
-			}
-			else {
-				writeCenterAligned(len.getKey(), len.getValue(), ' ');
-			}
+			writeAligned(align, len.getKey(), len.getValue(), ' ');
 		}
 		writer.write("|\n");
 		for (Map.Entry<String, Integer> len: lengths.entrySet()) {
 			writer.write("|");
 			int align = header.get(len.getKey());
-			if (align < 0) {
-				writeLeftAligned(":", len.getValue(), '-');
-			}
-			else if (align > 0) {
-				writeRightAligned(":", len.getValue(), '-');
+			if (align != 0) {
+				writeAligned(align, ":", len.getValue(), '-');
 			}
 			else {
 				writer.write(":" + Strings.repeat("-", Math.max(0, len.getValue()-2)) + ":");
@@ -114,6 +103,19 @@ public class MarkdownTableWriter implements Closeable
 	private String escapeTable(String s)
 	{
 		return s.replace("|", "&#124;");
+	}
+
+	private void writeAligned(int align, String s, int length, char padding) throws IOException
+	{
+		if (align < 0) {
+			writeLeftAligned(s, length, padding);
+		}
+		else if (align > 0) {
+			writeRightAligned(s, length, padding);
+		}
+		else {
+			writeCenterAligned(s, length, padding);
+		}
 	}
 
 	private void writeLeftAligned(String s, int length, char padding) throws IOException

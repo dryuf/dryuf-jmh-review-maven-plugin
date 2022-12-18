@@ -41,6 +41,8 @@ import java.util.regex.Pattern;
 @Log4j2
 public class InputProcessor
 {
+	private static final Pattern DATA_PATTERN = Pattern.compile("^\\W+benchmark:data:([^:]+):([^:]+):(.*)$");
+
 	private static final Pattern EMPTY_OR_CODE_PATTERN = Pattern.compile("^(|```)\\s*$");
 
 	private static final Pattern WORD_WITH_SPACES_PATTERN = Pattern.compile("(\\w+)(\\s+|$)\\b");
@@ -54,15 +56,13 @@ public class InputProcessor
 
 	public Map<String, Map<String, BenchmarkSet>> parseInput(Path inputFile)
 	{
-		Pattern dataPattern = Pattern.compile("^\\W+benchmark:data:([^:]+):([^:]+):(.*)$");
-
 		LinkedHashMap<String, Map<String, BenchmarkSet>> benchmarks = new LinkedHashMap<>();
 		try (BufferedReader reader = Files.newBufferedReader(inputFile)) {
 			for (;;) {
 				String line = reader.readLine();
 				if (line == null)
 					break;
-				Matcher dataMatcher = dataPattern.matcher(line);
+				Matcher dataMatcher = DATA_PATTERN.matcher(line);
 				if (dataMatcher.matches()) {
 					String dataset = dataMatcher.group(1);
 					String measure = dataMatcher.group(2);

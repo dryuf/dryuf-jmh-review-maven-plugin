@@ -16,7 +16,11 @@
 
 package net.dryuf.maven.plugin.jmhreview.processor;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.Value;
 import org.apache.maven.plugins.annotations.Parameter;
 
 import java.io.Writer;
@@ -29,6 +33,9 @@ import java.util.Set;
  * Plugin configuration.
  */
 @Data
+@Builder(builderClassName = "Builder", toBuilder = true)
+@NoArgsConstructor
+@AllArgsConstructor
 public class Configuration
 {
 	/** Names of the data sets. */
@@ -36,6 +43,7 @@ public class Configuration
 	protected Set<String> 		datasets;
 
 	/** Indicates whether errors parsing the file are fatal. */
+	@lombok.Builder.Default
 	@Parameter(required = false)
 	protected boolean		errorsFatal = true;
 

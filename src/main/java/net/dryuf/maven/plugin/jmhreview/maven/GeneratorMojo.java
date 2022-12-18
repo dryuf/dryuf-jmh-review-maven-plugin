@@ -46,14 +46,14 @@ public class GeneratorMojo extends AbstractMojo
 	public void			execute()
 	{
 		Processor generator = new Processor();
-		Configuration configuration = new Configuration();
-		configuration.setDatasets(datasets);
-		configuration.setErrorsFatal(errorsFatal);
-		configuration.setInputFiles(
-			Optional.ofNullable(inputs).orElseGet(() -> Collections.singletonList(output)).stream()
+		Configuration configuration = Configuration.builder()
+			.datasets(datasets)
+			.errorsFatal(errorsFatal)
+			.inputFiles(Optional.ofNullable(inputs).orElseGet(() -> Collections.singletonList(output)).stream()
 				.map(File::toPath)
-				.collect(ImmutableList.toImmutableList()));
-		configuration.setOutputFile(output.toPath());
+				.collect(ImmutableList.toImmutableList()))
+			.outputFile(output.toPath())
+			.build();
 		try {
 			generator.execute(configuration);
 		}
