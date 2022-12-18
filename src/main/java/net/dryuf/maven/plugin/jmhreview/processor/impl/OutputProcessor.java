@@ -30,6 +30,7 @@ import net.dryuf.maven.plugin.jmhreview.processor.util.ExtCollectors;
 import org.apache.commons.lang3.mutable.MutableInt;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.hc.core5.http.NameValuePair;
+import org.apache.hc.core5.http.message.BasicNameValuePair;
 import org.apache.hc.core5.net.URLEncodedUtils;
 
 import java.io.BufferedReader;
@@ -103,8 +104,17 @@ public class OutputProcessor
 		try (TextFileUpdater updater = new TextFileUpdater(new BufferedReader(new PipedReader(pipeWriter)), writer)) {
 			for (String dataset: configuration.getDatasets()) {
 				pipeWriter.write("|\n\n");
-				updater.write("<!--- benchmark:table:"+dataset+":: --->\n\n");
-				processTable(updater, dataset, Collections.emptyMap());
+				updater.write("<!--- benchmark:table:"+dataset+":"+
+					URLEncodedUtils.format(configuration.getOptions().stream()
+						.map(o -> new BasicNameValuePair(o.getKey(), o.getValue()))
+						.collect(Collectors.toList()), StandardCharsets.UTF_8)
+						.replace(":", "&#3a;")+
+					": --->\n\n");
+				processTable(updater, dataset, configuration.getOptions().stream()
+					.collect(Collectors.groupingBy(Map.Entry::getKey,
+						Collectors.mapping(Map.Entry::getValue, Collectors.toList())
+					))
+				);
 				updater.println("");
 			}
 			updater.update();
@@ -144,6 +154,12 @@ public class OutputProcessor
 			.flatMap(v -> v.keySet().stream())
 			.collect(ImmutableSet.toImmutableSet());
 
+		Map<String, FunctionBenchmark> compare = Optional.ofNullable(config.get("compare"))
+			.map(v -> Optional.ofNullable(set.get(v.get(0))).orElseThrow(() ->
+				new IllegalArgumentException("Unknown compare benchmark: "+v.get(0))
+			))
+			.orElse(null);
+
 		try (MarkdownTableWriter writer = new MarkdownTableWriter(updater.getWriter())) {
 			writer.writeHeader(ImmutableMap.<String, Integer>builder()
 				.put("Benchmark", -1)
@@ -151,6 +167,9 @@ public class OutputProcessor
 				.put("Units", -1)
 				.putAll(set.keySet().stream().map(e -> new AbstractMap.SimpleImmutableEntry<>(e, 1))
 					.collect(ImmutableMap.toImmutableMap(Map.Entry::getKey, Map.Entry::getValue)))
+				.putAll(compare == null ? Collections.emptyMap() :
+					set.keySet().stream().map(e -> new AbstractMap.SimpleImmutableEntry<>(e, 1))
+					.collect(ImmutableMap.toImmutableMap(e -> e.getKey()+"%", Map.Entry::getValue)))
 				.build()
 			);
 			for (String function: functions) {
@@ -171,6 +190,15 @@ public class OutputProcessor
 					.addAll(set.values().stream()
 						.map(fbs -> Optional.ofNullable(fbs.get(function))
 							.map(FunctionBenchmark::getScore)
+							.orElse("")
+						)
+						.iterator())
+					.addAll(compare == null ? Collections.emptyIterator() :
+						set.values().stream()
+						.map(fbs -> Optional.ofNullable(fbs.get(function))
+							.flatMap(f -> Optional.ofNullable(compare.get(function))
+								.map(cf -> String.format("%+d", (int) ((Double.parseDouble(f.getScore()) / Double.parseDouble(cf.getScore()) - 1)*100)))
+							)
 							.orElse("")
 						)
 						.iterator())

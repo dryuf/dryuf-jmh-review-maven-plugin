@@ -136,6 +136,19 @@ Class2.run                                                      avgt    2  26095
 <!--- benchmark:table:key-class:key=class&order=Class2&order=Class1: --->
 ```
 
+#### Option compare
+
+`compare=value` specifies base benchmark to compare to.  It generates % comparison for each dataset.
+
+```
+<!--- benchmark:table:key-class:key=class&compare=Class1: --->
+
+|Benchmark|Mode|Units|     Class1|     Class2|    Class3|Class1%|Class2%|Class3%|
+|:--------|:---|:----|----------:|----------:|---------:|------:|------:|------:|
+|execute  |avgt|ns/op|1678276.855|2678276.855|678276.855|     +0|    +59|    -59|
+|run      |avgt|ns/op|1609564.705|2609564.705|609564.705|     +0|    +62|    -62|
+```
+
 ## Usage app
 
 ```
@@ -147,10 +160,11 @@ Options:
 -i input-file     path to input file, can be multiple
 -o output-file    path to update to results to
 -p                output all datasets to stdout
+-c key=value      configuration option for stdout mode
 ```
 
 ```
-./target/jmh-review-results -e false -d jarfile -i target/it/update/benchmarks.md -p
+./target/jmh-review-results -e false -d jarfile -i src/test/data/compare/benchmarks.md -p -c key=class -c compare=Class1
 ```
 
 ## License

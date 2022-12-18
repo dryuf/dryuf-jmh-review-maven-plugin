@@ -26,6 +26,7 @@ import org.apache.maven.plugins.annotations.Parameter;
 import java.io.Writer;
 import java.nio.file.Path;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 
@@ -57,4 +58,7 @@ public class Configuration
 
 	/** Output writer, in case stream is required. */
 	protected Writer		outputWriter;
+
+	/** Options, if coming from app instead of file. */
+	protected List<Map.Entry<String, String>> options;
 }

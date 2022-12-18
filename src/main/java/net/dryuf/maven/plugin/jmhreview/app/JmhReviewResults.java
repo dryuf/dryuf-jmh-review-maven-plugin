@@ -14,6 +14,7 @@ import net.dryuf.maven.plugin.jmhreview.processor.Processor;
 
 import java.io.OutputStreamWriter;
 import java.nio.file.Paths;
+import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -49,7 +50,8 @@ public class JmhReviewResults extends AbstractCommand
 			"-d dataset", "dataset to update",
 			"-i input-file", "path to input file, can be multiple",
 			"-o output-file", "path to update to results to",
-			"-p", "output all datasets to stdout"
+			"-p", "output all datasets to stdout",
+			"-c key=value", "configuration option for stdout mode"
 		);
 	}
 
@@ -75,6 +77,14 @@ public class JmhReviewResults extends AbstractCommand
 
 		case "-p":
 			options.setOutputWriter(new OutputStreamWriter(System.out));
+			return true;
+
+		case "-c":
+			String option[] = needArgsParam(null, args).split("=", 2);
+			if (option.length != 2) {
+				throw new IllegalArgumentException("-c requires key=value pair");
+			}
+			options.getOptions().add(new AbstractMap.SimpleImmutableEntry<>(option[0], option[1]));
 			return true;
 
 		default:
@@ -106,5 +116,6 @@ public class JmhReviewResults extends AbstractCommand
 		this.options = new Configuration();
 		this.options.setDatasets(new LinkedHashSet<>());
 		this.options.setInputFiles(new ArrayList<>());
+		this.options.setOptions(new ArrayList<>());
 	}
 }
