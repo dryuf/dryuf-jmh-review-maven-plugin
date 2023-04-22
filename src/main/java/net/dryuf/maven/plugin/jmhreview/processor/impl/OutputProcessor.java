@@ -212,7 +212,6 @@ public class OutputProcessor
 	{
 		Map<String, BenchmarkSet> sources = Optional.ofNullable(benchmarks.get(dataset))
 			.orElseGet(Collections::emptyMap);
-		LinkedHashSet<String> functions = new LinkedHashSet<>();
 
 		BiFunction<BenchmarkSet, FunctionBenchmark, String> keyFunction;
 		BiFunction<BenchmarkSet, FunctionBenchmark, String> nameFunction;
@@ -245,11 +244,17 @@ public class OutputProcessor
 				},
 				(a, b) -> { throw new IllegalStateException(); }
 			);
+		Pattern filter = Optional.ofNullable(config.get("filter"))
+			.map(l -> l.get(0))
+			.map(f -> Pattern.compile(f, 0))
+			.orElseGet(() -> Pattern.compile(".*"));
+
 		MutableInt orderCounter = new MutableInt();
 		Map<String, Integer> order = config.getOrDefault("order", Collections.emptyList()).stream()
 			.collect(Collectors.toMap(Function.identity(), v -> orderCounter.getAndAdd(1)));
 		return sources.values().stream()
 			.flatMap(bs -> bs.getResults().values().stream().map(fb -> Pair.of(bs, fb)))
+			.filter(p -> filter.matcher(p.getRight().getName()).matches())
 			.collect(ExtCollectors.toStableSorted(Comparator.comparingInt(p ->
 				order.getOrDefault(keyFunction.apply(p.getLeft(), p.getRight()), Integer.MAX_VALUE))))
 			.collect(Collectors.groupingBy(

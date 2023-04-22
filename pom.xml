@@ -26,7 +26,7 @@
 
 	<groupId>net.dryuf.maven.plugin</groupId>
 	<artifactId>dryuf-jmh-review-maven-plugin</artifactId>
-	<version>1.1.0</version>
+	<version>1.1.1</version>
 	<packaging>maven-plugin</packaging>
 	<name>dryuf-jmh-review-maven-plugin</name>
 	<url>https://github.com/dryuf/dryuf-jmh-review-maven-plugin</url>

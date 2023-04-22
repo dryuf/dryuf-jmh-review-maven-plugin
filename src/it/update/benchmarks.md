@@ -2,7 +2,7 @@
 
 ### Comparison
 
-<!--- benchmark:table:jarfile:java 20 concurrent-jar: --->
+<!--- benchmark:table:jarfile::basic test: --->
 
 |Benchmark                                                   |Mode|Cnt|     java 19|
 |------------------------------------------------------------|----|---|------------|
@@ -12,6 +12,12 @@
 |BigCompressedSingleThreadBenchmark.benchmark1Jar            |avgt|  2| 4281239.514|
 |BigCompressedSingleThreadBenchmark.benchmark2ClassLoader    |avgt|  2| 4245898.114|
 |BigCompressedSingleThreadBenchmark.benchmark3Class          |avgt|  2| 4191390.999|
+
+<!--- benchmark:table:jarfile:filter=^BigCompressedConcurrentThreadBenchmark\..*:filter test: --->
+
+|Benchmark                                                   |Mode|Cnt|     java 19|
+|------------------------------------------------------------|----|---|------------|
+
 
 ### java 19
 

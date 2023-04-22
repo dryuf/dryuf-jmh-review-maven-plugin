@@ -31,7 +31,7 @@ Typical usage is as follows:
     <plugin>
         <groupId>net.dryuf.maven.plugin</groupId>
         <artifactId>dryuf-jmh-review-maven-plugin</artifactId>
-        <version>${dryuf-jmh-review-maven-plugin.version}</version>
+        <version>1.1.1</version>
         <executions>
             <execution>
                 <phase>test-compile</phase>
@@ -147,6 +147,19 @@ Class2.run                                                      avgt    2  26095
 |:--------|:---|:----|----------:|----------:|---------:|------:|------:|------:|
 |execute  |avgt|ns/op|1678276.855|2678276.855|678276.855|     +0|    +59|    -59|
 |run      |avgt|ns/op|1609564.705|2609564.705|609564.705|     +0|    +62|    -62|
+```
+
+#### Option filter
+
+`filter=value` specifies regexp filter to include subset of benchmarks
+
+```
+<!--- benchmark:table:filtering:filter=Class1&key=class: --->
+
+|Benchmark|Mode|Units|     Class1|
+|:--------|:---|:----|----------:|
+|execute  |avgt|ns/op|1678276.855|
+|run      |avgt|ns/op|1609564.705|
 ```
 
 ## Usage app
