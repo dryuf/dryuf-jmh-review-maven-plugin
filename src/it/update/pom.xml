@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>net.dryuf.maven.plugin</groupId>
 	<artifactId>dryuf-executable-jar-maven-plugin-it-remove</artifactId>
-	<version>1.1.1</version>
+	<version>1.2.0</version>
 	<name>dryuf-jmh-review-maven-plugin.it</name>
 	<description>Maven plugin for updating benchmark sets - integration test</description>
 	<packaging>jar</packaging>

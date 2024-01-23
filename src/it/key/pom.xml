@@ -52,12 +52,9 @@
 						</goals>
 						<configuration>
 							<datasets>
-								<dataset>jarfile</dataset>
+								<dataset>ClassData</dataset>
+								<dataset>KeyData</dataset>
 							</datasets>
-							<inputs>
-								<input>one.md</input>
-								<input>two.md</input>
-							</inputs>
 							<output>benchmarks.md</output>
 						</configuration>
 					</execution>

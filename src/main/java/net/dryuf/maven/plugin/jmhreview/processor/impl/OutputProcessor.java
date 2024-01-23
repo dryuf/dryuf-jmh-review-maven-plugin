@@ -65,6 +65,7 @@ public class OutputProcessor
 {
 	private static final Pattern TABLE_PATTERN = Pattern.compile("^\\W+benchmark:table:([^:]+):([^:]*):.*$");
 
+	private static final Pattern METHOD_NAME_BENCHMARK = Pattern.compile("^(\\w+)\\.([^_]+)_(.+)$");
 	private final Configuration configuration;
 
 	final Map<String, Map<String, BenchmarkSet>> benchmarks;
@@ -226,8 +227,24 @@ public class OutputProcessor
 				keyFunction = (bs, fb) -> fb.getName().split("\\.")[0];
 				nameFunction = (bs, fb) -> fb.getName().split("\\.")[1];
 			}
+			else if (key.equals("method-benchmark_run")) {
+				keyFunction = (bs, fb) -> {
+					Matcher m = METHOD_NAME_BENCHMARK.matcher(fb.getName());
+					if (!m.matches()) {
+						throw new IllegalArgumentException("Benchmark does not match pattern Class.benchmark_run: " + fb.getName());
+					}
+					return m.group(3);
+				};
+				nameFunction = (bs, fb) -> {
+					Matcher m = METHOD_NAME_BENCHMARK.matcher(fb.getName());
+					if (!m.matches()) {
+						throw new IllegalArgumentException("Benchmark does not match pattern Class.benchmark_run: " + fb.getName());
+					}
+					return m.group(2);
+				};
+			}
 			else {
-				throw new UnsupportedOperationException("Unknown config value for key (only empty and class are supported): key="+key);
+				throw new UnsupportedOperationException("Unknown config value for key (only empty, method-benchmark_run or class are supported): key="+key);
 			}
 		}
 		modifyFunction = config.getOrDefault("multiply", Collections.emptyList()).stream()

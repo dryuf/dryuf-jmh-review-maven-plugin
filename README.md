@@ -31,7 +31,7 @@ Typical usage is as follows:
     <plugin>
         <groupId>net.dryuf.maven.plugin</groupId>
         <artifactId>dryuf-jmh-review-maven-plugin</artifactId>
-        <version>1.1.1</version>
+        <version>1.2.0</version>
         <executions>
             <execution>
                 <phase>test-compile</phase>
@@ -98,6 +98,9 @@ options can be specified multiple times.
 
 `key=class` config parameter organizes benchmarks by class name instead of measure set.
 
+`key=method-benchmark_run` config parameter organizes benchmarks by method, the method part before `_` being the type
+and after `_` actual execution. 
+
 ```
 <!--- benchmark:table:key-class:key=class: --->
 
@@ -105,6 +108,12 @@ options can be specified multiple times.
 |:--------|:---|:----|----------:|----------:|
 |execute  |avgt|ns/op|1678276.855|2678276.855|
 |run      |avgt|ns/op|1609564.705|2609564.705|
+
+<!--- benchmark:table:key-method:key=method-benchmark_run: --->
+
+|Benchmark   |Mode|Units|    HashMap|LinkedHashMap|
+|:-----------|:---|:----|----------:|------------:|
+|remove      |avgt|ns/op|1678276.855|  2678276.855|
 
 ### java 19
 
@@ -115,6 +124,13 @@ Class1.execute                                                  avgt    2  16782
 Class1.run                                                      avgt    2  1609564.705          ns/op
 Class2.execute                                                  avgt    2  2678276.855          ns/op
 Class2.run                                                      avgt    2  2609564.705          ns/op
+-```
+
+<!--- benchmark:data:key-class:all:: --->
+-```
+Benchmark                                                       Mode  Cnt        Score   Error  Units
+MapBench.remove_HashMap                                         avgt    2  1678276.855          ns/op
+MapBench.remove_LinkedHashMap                                   avgt    2  2678276.855          ns/op
 -```
 ```
 
